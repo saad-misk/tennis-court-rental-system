@@ -1,0 +1,40 @@
+@model TennisCourtRentalSystem.Models.Customer
+
+@{
+    ViewData["Title"] = "Customer Details";
+    Layout = "_Layout";
+}
+
+<h1>Customer Details</h1>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Customer ID:</dt>
+        <dd class="col-sm-10">@Model.CustomerId</dd>
+
+        <dt class="col-sm-2">Username:</dt>
+        <dd class="col-sm-10">@Model.UserName</dd>
+
+        <dt class="col-sm-2">Email:</dt>
+        <dd class="col-sm-10">@Model.Email</dd>
+
+        <dt class="col-sm-2">Phone:</dt>
+        <dd class="col-sm-10">@Model.TelNo</dd>
+
+        <dt class="col-sm-2">Gender:</dt>
+        <dd class="col-sm-10">@Model.Gender</dd>
+
+        <dt class="col-sm-2">Customer Type:</dt>
+        <dd class="col-sm-10">@Model.CustomerType</dd>
+
+        <dt class="col-sm-2">Organization:</dt>
+        <dd class="col-sm-10">@Model.OrganizationName</dd>
+
+        <dt class="col-sm-2">Address:</dt>
+        <dd class="col-sm-10">@Model.Address?.Street, @Model.Address?.City</dd> <!-- Adjust based on your Address model -->
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.CustomerId" class="btn btn-warning">Edit</a>
+    <a asp-action="Customers" class="btn btn-secondary">Back to List</a>
+</div>

@@ -1,0 +1,46 @@
+@model TennisCourtRentalSystem.Models.Court
+@{
+    ViewData["Title"] = "Court Availability";
+    Layout = "_Layout";
+}
+
+<h1>Check Availability for Court @Model.CourtNumber</h1>
+
+<!-- Form to check availability by date/time -->
+<form asp-action="Available" method="post">
+    <div class="row">
+        <div class="col-md-3">
+            <label>Date:</label>
+            <input type="date" name="date" class="form-control" required />
+        </div>
+        <div class="col-md-3">
+            <label>Start Time:</label>
+            <input type="time" name="startTime" class="form-control" required />
+        </div>
+        <div class="col-md-3">
+            <label>End Time:</label>
+            <input type="time" name="endTime" class="form-control" required />
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary mt-4">Check</button>
+        </div>
+    </div>
+</form>
+
+<hr />
+
+<!-- Display availability results -->
+@if (ViewBag.AvailabilityResults != null)
+{
+    <h4>Availability on @ViewBag.SelectedDate.ToString("dd/MM/yyyy")</h4>
+    <div class="alert @(ViewBag.IsAvailable ? "alert-success" : "alert-danger")">
+        @if (ViewBag.IsAvailable)
+        {
+            <span>This court is available from @ViewBag.StartTime to @ViewBag.EndTime.</span>
+        }
+        else
+        {
+            <span>This court is already booked during the selected time.</span>
+        }
+    </div>
+}

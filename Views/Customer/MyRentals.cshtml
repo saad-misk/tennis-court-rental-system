@@ -1,0 +1,36 @@
+@model IEnumerable<TennisCourtRentalSystem.Models.Rental>
+@{
+    ViewData["Title"] = "My Rentals";
+    Layout = "_Layout";
+}
+
+<h1>My Rentals</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Court</th>
+            <th>Date</th>
+            <th>Time Slot</th>
+            <th>Fee</th>
+            <th>Payment Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rental in Model)
+        {
+            <tr>
+                <td>Court @rental.CourtNumber</td>
+                <td>@rental.RentalDate.ToString("dd/MM/yyyy")</td>
+                <td>@rental.StartTime - @rental.EndTime</td>
+                <td>@rental.RentalFee.ToString("C")</td>
+                <td>@rental.PaymentStatus</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@rental.RentalId">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@rental.RentalId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

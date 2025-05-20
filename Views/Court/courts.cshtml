@@ -1,0 +1,32 @@
+@model IEnumerable<TennisCourtRentalSystem.Models.Court>
+
+@{
+    ViewData["Title"] = "Courts";
+    Layout = "_Layout";
+}
+
+<h1>Courts</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Court Number</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var court in Model)
+        {
+            <tr>
+                <td>@court.CourtNumber</td>
+                <td>@court.Location</td>
+                <td>@court.CourtStatus</td>
+                <td>
+                    <a asp-action="Available" asp-route-courtNumber="@court.CourtNumber">Check Availability</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

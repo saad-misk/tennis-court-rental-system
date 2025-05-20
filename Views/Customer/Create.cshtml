@@ -1,0 +1,68 @@
+@model TennisCourtRentalSystem.Models.Rental
+@{
+    ViewData["Title"] = "Create Rental";
+    Layout = "_Layout";
+}
+
+<h1>Create New Rental</h1>
+
+<form asp-action="Create">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="CustomerId" class="control-label">Customer</label>
+                <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.Customers"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourtNumber" class="control-label">Court</label>
+                <select asp-for="CourtNumber" class="form-control" asp-items="ViewBag.Courts"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="RentalDate" class="control-label"></label>
+                <input asp-for="RentalDate" type="date" class="form-control" />
+                <span asp-validation-for="RentalDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartTime" class="control-label"></label>
+                <input asp-for="StartTime" type="time" class="form-control" />
+                <span asp-validation-for="StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndTime" class="control-label"></label>
+                <input asp-for="EndTime" type="time" class="form-control" />
+                <span asp-validation-for="EndTime" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="ExpectedAttendance" class="control-label"></label>
+                <input asp-for="ExpectedAttendance" class="form-control" />
+                <span asp-validation-for="ExpectedAttendance" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PaymentStatus" class="control-label"></label>
+                <select asp-for="PaymentStatus" class="form-control">
+                    <option value="Pending">Pending</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="RentalFee" class="control-label"></label>
+                <input asp-for="RentalFee" class="form-control" />
+                <span asp-validation-for="RentalFee" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="MyRentals">Back to My Rentals</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
