@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Rentals | Tennis Court</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="user-navbar-placeholder"></div>
+    <script>
+      fetch("user-navbar.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("user-navbar-placeholder").innerHTML = html;
+        });
+    </script>
+
+    <div class="container mt-5">
+      <div class="container mt-4">
+        <h4 class="text-secondary mb-3">Your Past and Current Rentals</h4>
+        <p>
+          Here you can view, edit, or cancel your existing reservations. Ensure
+          your contact information and expected attendance are correct, as
+          exceeding attendance limits may result in penalties. Always clean up
+          after your session and remove all belongings.
+        </p>
+      </div>
+      <table class="table table-striped mt-3">
+        <thead>
+          <tr>
+            <th>Rental ID</th>
+            <th>Court</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Example -->
+          <tr>
+            <td>12</td>
+            <td>3</td>
+            <td>2025-05-23</td>
+            <td>4PM - 5PM</td>
+            <td>
+              <a
+                href="edit-rental.html?rentalId=123"
+                class="btn btn-sm btn-warning"
+                >Edit</a
+              >
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
