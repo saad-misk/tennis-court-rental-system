@@ -1,0 +1,79 @@
+@model List<Rental>
+@{
+    ViewData["Title"] = "Active Rentals";
+}
+
+<div class="data-container">
+    <h2 class="page-title mb-4">Active Court Rentals</h2>
+
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-header">
+                    <tr>
+                        <th>Court</th>
+                        <th>Customer</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var rental in Model)
+                    {
+                        <tr>
+                            <td>@rental.Court.Location</td>
+                            <td>@rental.Customer.UserName</td>
+                            <td>@rental.StartTime.ToString("HH:mm")</td>
+                            <td>@rental.EndTime.ToString("HH:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="card status-card mt-4">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-clock fa-3x text-muted mb-3"></i>
+                <h5 class="card-title">No Active Rentals</h5>
+                <p class="text-muted">There are currently no active court rentals</p>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .data-container {
+        max-width: 1200px;
+        margin: 2% auto;
+        padding: 2rem;
+        background-color: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    .table-header {
+        background-color: #28a745;
+        color: white;
+    }
+    .page-title {
+        color: #2d3748;
+        text-align: center;
+    }
+    .status-card {
+        background-color: #f8f9fa;
+        border-radius: 1rem;
+    }
+    .table td, .table th {
+        vertical-align: middle;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,70 @@
+@model Court
+@{
+    ViewData["Title"] =  "Create Court";
+}
+
+<div class="data-container">
+    <h2 class="page-title mb-4">@( "Create New Court")</h2>
+
+    <form asp-action="@( "CreateCourt")" class="form-card">
+        @if (Model.CourtNumber != 0)
+        {
+            <input type="hidden" asp-for="CourtNumber" />
+        }
+
+        <div class="mb-4">
+            <label asp-for="CourtNumber" class="form-label fw-bold"></label>
+            <input asp-for="CourtNumber" class="form-control" min="1" />
+            <span asp-validation-for="CourtNumber" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="Location" class="form-label fw-bold"></label>
+            <input asp-for="Location" class="form-control" />
+            <span asp-validation-for="Location" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="CourtStatus" class="form-label fw-bold"></label>
+            <select asp-for="CourtStatus" class="form-select">
+                <option value="Available">Available</option>
+                <option value="UnderMaintenance">Under Maintenance</option>
+            </select>
+            <span asp-validation-for="CourtStatus" class="text-danger small"></span>
+        </div>
+
+        <div class="d-grid gap-2 mt-4">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save me-2"></i>@("Create Court")
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .data-container {
+        max-width: 600px;
+        margin: 2% auto;
+        padding: 2rem;
+        background-color: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    .form-card {
+        padding: 1.5rem;
+        background-color: #f8f9fa;
+        border-radius: 0.8rem;
+    }
+    .page-title {
+        color: #2d3748;
+        text-align: center;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

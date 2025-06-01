@@ -1,0 +1,86 @@
+@model TennisCourtRentalSystem.Models.Rental
+
+@{
+    ViewData["Title"] = "Rental Details";
+    bool isAdmin = User.IsInRole("Admin");
+}
+
+<div class="container mt-4">
+    <h2>Rental Details</h2>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-3">Rental ID</dt>
+        <dd class="col-sm-9">@Model.RentalId</dd>
+
+        <dt class="col-sm-3">Court</dt>
+        <dd class="col-sm-9">
+            @Model.Court.Location (Court #@Model.CourtNumber)
+        </dd>
+
+        <dt class="col-sm-3">Customer</dt>
+        <dd class="col-sm-9">@Model.Customer.UserName</dd>
+
+        <dt class="col-sm-3">Date</dt>
+        <dd class="colsm-9">@Model.RentalDate.ToShortDateString()</dd>
+
+        <dt class="col-sm-3">Time Slot</dt>
+        <dd class="col-sm-9">@Model.StartTime.ToString("HH:mm") - @Model.EndTime.ToString("HH:mm")</dd>
+
+        <dt class="col-sm-3">Fee</dt>
+        <dd class="col-sm-9">@Model.RentalFee.ToString("C")</dd>
+
+        <dt class="col-sm-3">Payment Status</dt>
+        <dd class="col-sm-9">
+            <span class="badge @(Model.PaymentStatus == "Paid" ? "bg-success" : "bg-warning")">
+                @Model.PaymentStatus
+            </span>
+        </dd>
+
+        @if (Model.ExpectedAttendance.HasValue)
+        {
+            <dt class="col-sm-3">Expected Attendance</dt>
+            <dd class="col-sm-9">@Model.ExpectedAttendance</dd>
+        }
+
+        @if (Model.EventId != null)
+        {
+            <dt class="col-sm-3">Event</dt>
+            <dd class="col-sm-9">Event #@Model.EventId</dd>
+        }
+
+        <dt class="col-sm-3">Date Booked</dt>
+        <dd class="col-sm-9">@Model.DateBooked.ToString("g")</dd>
+
+        @if (Model.PaymentDate.HasValue)
+        {
+            <dt class="col-sm-3">Payment Date</dt>
+            <dd class="col-sm-9">@Model.PaymentDate.Value.ToString("g")</dd>
+        }
+    </dl>
+
+    @if (isAdmin)
+    {
+        <div class="mb-3">
+            <form asp-action="UpdatePaymentStatus" method="post">
+                <input type="hidden" name="rentalId" value="@Model.RentalId" />
+                <div class="input-group" style="max-width: 300px;">
+                    <select name="status" class="form-select">
+                        <option value="Pending">Pending</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Update Status</button>
+                </div>
+            </form>
+        </div>
+    }
+
+    <div>
+        <a asp-action="MyRentals" class="btn btn-secondary">Back to List</a>
+        @if (!isAdmin)
+        {
+            <a asp-action="Bill" asp-route-id="@Model.RentalId" class="btn btn-info">View Bill</a>
+        }
+    </div>
+</div>

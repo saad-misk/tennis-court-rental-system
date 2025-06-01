@@ -1,0 +1,201 @@
+@using TennisCourtRentalSystem.Models.ViewModels
+@model CourtRentalRequestViewModel
+@{
+    ViewData["Title"] = "Request Court Rental";
+    var today = DateTime.Today.ToString("yyyy-MM-dd");
+    var maxDate = DateTime.Today.AddDays(14).ToString("yyyy-MM-dd");
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="container mt-5 mb-5" style="max-width: 800px;">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0"><i class="fas fa-calendar-plus me-2"></i> Book Your Tennis Court</h2>
+        </div>
+        <div class="card-body p-4">
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+            }
+
+            <form asp-action="SubmitRentalRequest" method="post" id="rentalForm">
+
+                <h4 class="mb-3 text-primary"><span class="badge bg-secondary me-2">1</span> Select Date & Time</h4>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="RentalDate" class="form-label fw-bold"></label>
+                        <input asp-for="RentalDate" type="date" class="form-control" min="@today" max="@maxDate" id="rentalDateInput" />
+                        <span asp-validation-for="RentalDate" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="StartTime" class="form-label fw-bold"></label>
+                        <input asp-for="StartTime" type="time" class="form-control" step="1800" id="startTimeInput" />
+                        <span asp-validation-for="StartTime" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="Duration" class="form-label fw-bold"></label>
+                        <select asp-for="Duration" class="form-select" id="durationInput">
+                            <option value="1:00">1 hour</option>
+                            <option value="1:30">1.5 hours</option>
+                            <option value="2:00">2 hours</option>
+                        </select>
+                        <span asp-validation-for="Duration" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="text-center mb-4">
+                    <button type="button" class="btn btn-info text-white" id="findCourtsButton">
+                        <i class="fas fa-search me-2"></i>Find Available Courts
+                    </button>
+                </div>
+                <hr class="my-4">
+
+                <h4 class="mb-3 text-primary"><span class="badge bg-secondary me-2">2</span> Select a Court</h4>
+                <div id="courtsSection" class="mb-4 p-3 bg-light rounded" style="min-height: 150px;">
+                    <div id="courtsLoader" class="text-center" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Searching for available courts...</p>
+                    </div>
+                    <div id="courtsList" class="row g-3">
+                        <p class="text-muted text-center">Please select a date, time, and duration first, then click 'Find Available Courts'.</p>
+                    </div>
+                     <span asp-validation-for="SelectedCourtNumber" class="text-danger d-block mt-2"></span>
+                </div>
+                 <input type="hidden" asp-for="SelectedCourtNumber" id="selectedCourtInput" />
+
+
+                <hr class="my-4">
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a asp-action="Dashboard" asp-controller="Customer" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                    </a>
+                    <button type="submit" class="btn btn-success btn-lg" id="submitButton" disabled>
+                        <i class="fas fa-check-circle me-2"></i>Submit Booking
+                    </button>
+                </div>
+
+            </form>
+        </div> </div> </div>
+         @section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            const courtsListDiv = $('#courtsList');
+            const courtsLoader = $('#courtsLoader');
+            const findButton = $('#findCourtsButton');
+            const submitButton = $('#submitButton');
+            const selectedCourtInput = $('#selectedCourtInput');
+
+            // Search available courts
+            findButton.on('click', function () {
+                const rentalDate = $('#rentalDateInput').val();
+                const startTime = $('#startTimeInput').val();
+                const duration = $('#durationInput').val();
+
+                if (!rentalDate || !startTime || !duration) {
+                    courtsListDiv.html('<p class="alert alert-warning text-center">Please fill in Date, Start Time, and Duration.</p>');
+                    return;
+                }
+
+                courtsListDiv.empty().hide();
+                courtsLoader.show();
+                submitButton.prop('disabled', true);
+                selectedCourtInput.val('');
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetAvailableCourts", "Customer")',
+                    data: {
+                        rentalDate: rentalDate,
+                        startTime: startTime,
+                        duration: duration
+                    },
+                    success: function (response) {
+                        courtsLoader.hide();
+                        courtsListDiv.show();
+
+                        if (response.success && response.courts && response.courts.length > 0) {
+                            let html = `<p class="text-success">Found ${response.courts.length} available court(s):</p>`;
+                            html += '<div class="row">';
+                            $.each(response.courts, function (index, court) {
+                                html += `
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-check court-radio-card p-3 border rounded">
+                                            <input class="form-check-input" type="radio" name="courtSelectionRadio"
+                                                   id="court_${court.courtNumber}" value="${court.courtNumber}">
+                                            <label class="form-check-label w-100" for="court_${court.courtNumber}">
+                                                <strong>Court ${court.courtNumber}</strong>
+                                                <p class="mb-0 text-muted small">${court.description}</p>
+                                            </label>
+                                        </div>
+                                    </div>`;
+                            });
+                            html += '</div>';
+                            courtsListDiv.html(html);
+                        } else if (response.success) {
+                            courtsListDiv.html('<p class="alert alert-info text-center">Sorry, no courts are available for the selected time slot.</p>');
+                        } else {
+                            courtsListDiv.html(`<p class="alert alert-danger text-center">${response.message || 'An error occurred.'}</p>`);
+                        }
+                    },
+                    error: function () {
+                        courtsLoader.hide();
+                        courtsListDiv.show().html('<p class="alert alert-danger text-center">Failed to check court availability. Please try again later.</p>');
+                    }
+                });
+            });
+
+            // Update selection on radio change
+            courtsListDiv.on('change', 'input[name="courtSelectionRadio"]', function () {
+                if ($(this).is(':checked')) {
+                    selectedCourtInput.val($(this).val());
+                    submitButton.prop('disabled', false);
+                }
+            });
+
+            // Make the whole card clickable
+            courtsListDiv.on('click', '.court-radio-card', function (e) {
+                const radio = $(this).find('input[type="radio"]');
+                radio.prop('checked', true).trigger('change');
+            });
+
+            // Prevent form submission via Enter unless it's the submit button
+            $('#rentalForm').on('keypress', function (e) {
+                if (e.keyCode === 13 && e.target.type !== 'submit') {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+}
+
+     <style>
+        .court-radio-card {
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .court-radio-card:hover {
+            background-color: #e9ecef;
+        }
+        .court-radio-card input[type="radio"]:checked + label {
+            font-weight: bold;
+            color: #0d6efd;
+        }
+         .court-radio-card input[type="radio"] {
+            margin-top: 0.8rem !important;
+            float: left;
+            margin-right: 10px;
+         }
+         .court-radio-card label {
+            display: block;
+            padding-left: 5px;
+         }
+    </style>
+}

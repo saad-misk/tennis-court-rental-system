@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace TennisCourtRentalSystem.Models;
+﻿namespace TennisCourtRentalSystem.Models;
 
 public partial class CourtManager : User
 {
-    public int EmployeeId { get; set; }
+    public string EmployeeId { get; set; }
 
     public string? OfficePhone { get; set; }
 

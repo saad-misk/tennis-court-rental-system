@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace TennisCourtRentalSystem.Models;
+﻿namespace TennisCourtRentalSystem.Models;
 
 public partial class Event
 {
-    public int EventId { get; set; }
+    public string EventId { get; set; }
 
-    public int RentalId { get; set; }
+    public string RentalId { get; set; }
 
-    public int EmployeeId { get; set; }
+    public string EmployeeId { get; set; }
 
     public string EventType { get; set; } = null!;
 

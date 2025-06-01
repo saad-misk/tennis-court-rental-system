@@ -1,77 +1,57 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TennisCourtRentalSystem.Models;
 using TennisCourtRentalSystem.Repositories;
 
-namespace TennisCourtRentalSystem.Controllers
+namespace TennisCourtRentalSystem.Controllers;
+
+public class ReportController : Controller
 {
-    public class ReportController : Controller
+    private readonly RentalRepository _rentalRepo;
+    private readonly CustomerRepository _customerRepo;
+    private readonly CourtManagerRepository _courtmngrRepo;
+
+    private readonly CourtRepository _courtRepo;
+
+    public ReportController(
+        RentalRepository rentalRepository,
+        CustomerRepository customerRepository,
+        CourtRepository courtRepository,
+        CourtManagerRepository courtManagerRepository)
     {
-        private readonly RentalRepository _rentalRepository;
-        private readonly CustomerRepository _customerRepository;
-        private readonly CourtRepository _courtRepository;
-
-        public ReportController(
-            RentalRepository rentalRepository,
-            CustomerRepository customerRepository,
-            CourtRepository courtRepository)
-        {
-            _rentalRepository = rentalRepository;
-            _customerRepository = customerRepository;
-            _courtRepository = courtRepository;
-        }
-
-        // Active Rentals
-        public IActionResult ActiveRentals(string status = "Pending")
-        {
-            ViewBag.StatusList = new List<string> { "Pending", "Paid", "Cancelled" };
-            var rentals = _rentalRepository.GetByStatus(status);
-            return View(rentals);
-        }
-
-        // Court Availability
-        public IActionResult CourtAvailability(DateTime? date)
-        {
-            date ??= DateTime.Today;
-            ViewBag.SelectedDate = date;
-            
-            var courts = _courtRepository.GetAllCourts();
-            foreach (var court in courts)
-            {
-                court.CourtStatus = _rentalRepository.IsCourtAvailable(court.CourtNumber, date.Value) 
-                    ? "Available" 
-                    : "Booked";
-            }
-            return View(courts);
-        }
-
-        // Customer List
-        public IActionResult CustomerList()
-        {
-            var customers = _customerRepository.GetAllWithRentals();
-            return View(customers);
-        }
-
-        // Generate Bill
-        public IActionResult GenerateBill(int id)
-        {
-            var rental = _rentalRepository.GetRentalsByCustomer(id);
-            return View(rental);
-        }
-
-        // Revenue Report
-        public IActionResult Revenue(DateTime? startDate, DateTime? endDate)
-        {
-            if (startDate == null || endDate == null)
-            {
-                ViewBag.ReportGenerated = false;
-                return View(0m);
-            }
-
-            var totalRevenue = _rentalRepository.GetRevenueByDateRange(startDate.Value, endDate.Value);
-            ViewBag.ReportGenerated = true;
-            ViewBag.StartDate = startDate;
-            ViewBag.EndDate = endDate;
-            return View(totalRevenue);
-        }
+        _rentalRepo = rentalRepository;
+        _customerRepo = customerRepository;
+        _courtRepo = courtRepository;
+        _courtmngrRepo = courtManagerRepository;
     }
+
+    [Authorize(Roles = "Admin")]
+    public IActionResult ActiveRentals()
+    {
+        var activeRentals = _rentalRepo.GetActiveRentals(DateTime.Now);
+        return View(activeRentals);
+    }
+
+    [Authorize(Roles = "Admin")]
+    public IActionResult AvailabilityStatus(DateOnly date, TimeOnly startTime, TimeOnly endTime)
+    {
+        var courts = _courtRepo.GetCourtRentalStatus(date, startTime, endTime);
+        return View(courts);
+    }
+
+    [Authorize(Roles = "Admin")]
+    public IActionResult CourtRevenue(int courtNumber)
+    {
+
+        var rentals = _courtmngrRepo.GetRentalsForCourt(courtNumber);
+
+        return View(rentals);
+    }
+
+    [Authorize(Roles = "Admin")]
+    public IActionResult CurrentUsage()
+    {
+        var currentUsage = _rentalRepo.GetCurrentCourtUsage();
+        return View(currentUsage);
+    }
+
 }

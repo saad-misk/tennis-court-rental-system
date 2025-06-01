@@ -1,0 +1,412 @@
+@using TennisCourtRentalSystem.Models.ViewModels
+@model CustomerDashboardViewModel
+@{
+    ViewData["Title"] = "My Tennis Dashboard";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="customer-dashboard">
+
+    <div class="d-flex justify-content-between align-items-center mb-5 pb-3 border-bottom">
+        <div>
+            <h1 class="dashboard-title">Welcome, @Model.Customer.UserName!</h1>
+            <p class="text-muted mb-0">Member since @Model.Customer.DateCreated.ToString("MMMM yyyy")</p>
+        </div>
+        <div>
+            <a asp-action="CourtRentalRequest" class="btn btn-primary btn-lg shadow-sm">
+                <i class="fas fa-plus-circle me-2"></i>Book a Court
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-lg-4 col-md-6">
+            <div class="stat-card h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="stat-label">Active Bookings</h5>
+                        <h2 class="stat-value">@Model.ActiveRentalsCount</h2>
+                    </div>
+                    <div class="stat-icon-wrapper bg-success">
+                        <i class="fas fa-calendar-check stat-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="stat-card h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="stat-label">Total Spent</h5>
+                        <h2 class="stat-value">@Model.TotalSpent.ToString("C")</h2>
+                    </div>
+                    <div class="stat-icon-wrapper bg-warning">
+                        <i class="fas fa-coins stat-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-12"> <div class="stat-card h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="stat-label">Upcoming Bookings</h5>
+                        <h2 class="stat-value">@Model.UpcomingRentalsCount</h2>
+                    </div>
+                     <div class="stat-icon-wrapper bg-info">
+                        <i class="fas fa-clock stat-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-5">
+        <div class="card-header">
+            <h4 class="section-title mb-0"><i class="fas fa-search-location me-2"></i>Check Court Availability</h4>
+        </div>
+        <div class="card-body">
+            <form asp-controller="Court" asp-action="Availability" method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="date" id="date" name="date" class="form-control"
+                           value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                </div>
+                <div class="col-md-3">
+                    <label for="startTime" class="form-label">Start Time</label>
+                    <input type="time" id="startTime" name="startTime" class="form-control"
+                           value="10:00">
+                </div>
+                <div class="col-md-3">
+                    <label for="duration" class="form-label">Duration</label>
+                    <select id="duration" name="duration" class="form-select">
+                        <option value="1:00">1 hour</option>
+                        <option value="1:30">1.5 hours</option>
+                        <option value="2:00">2 hours</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-search me-1"></i>Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-5">
+         <div class="card-header">
+             <h4 class="section-title mb-0"><i class="fas fa-calendar-alt me-2"></i>Upcoming Bookings</h4>
+         </div>
+         <div class="card-body p-0"> @if (Model.UpcomingRentals.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover table-vcenter mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Court</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var rental in Model.UpcomingRentals)
+                            {
+                                <tr>
+                                    <td>Court @rental.CourtNumber</td>
+                                    <td>@rental.RentalDate.ToString("ddd, MMM dd, yyyy")</td>
+                                    <td>@rental.StartTime.ToString("hh:mm tt") - @rental.EndTime.ToString("hh:mm tt")</td>
+                                    <td class="text-center">
+                                        <span class="badge @GetStatusBadge(rental.PaymentStatus)">
+                                            @rental.PaymentStatus
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <a asp-action="Edit" asp-controller="Rental"
+                                           asp-route-id="@rental.RentalId"
+                                           class="btn btn-sm btn-outline-secondary me-1" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-controller="Rental"
+                                           asp-route-id="@rental.RentalId"
+                                           class="btn btn-sm btn-outline-danger" title="Cancel">
+                                           <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state p-5">
+                    <i class="fas fa-calendar-plus empty-state-icon"></i>
+                    <p class="empty-state-text mt-3">You have no upcoming bookings. Time to play!</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header">
+             <h4 class="section-title mb-0"><i class="fas fa-history me-2"></i>Booking History</h4>
+         </div>
+         <div class="card-body p-0">
+            @if (Model.PastRentals.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover table-vcenter mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date</th>
+                                <th>Court</th>
+                                <th>Duration</th>
+                                <th class="text-end">Amount</th>
+                                <th class="text-center">Receipt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var rental in Model.PastRentals)
+                            {
+                                <tr>
+                                    <td>@rental.RentalDate.ToString("MMM dd, yyyy")</td>
+                                    <td>Court @rental.CourtNumber</td>
+                                    <td>@((rental.EndTime - rental.StartTime).ToString(@"h\h\ m\m"))</td>
+                                    <td class="text-end">@rental.RentalFee.ToString("C")</td>
+                                    <td class="text-center">
+                                        <a asp-action="Bill" asp-controller="Rental"
+                                           asp-route-id="@rental.RentalId"
+                                           class="btn btn-sm btn-outline-success">
+                                            <i class="fas fa-receipt me-1"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                 <div class="empty-state p-5">
+                    <i class="fas fa-clock-rotate-left empty-state-icon"></i>
+                    <p class="empty-state-text mt-3">No past bookings found in your history.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .customer-dashboard {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 20px;
+    }
+
+    .dashboard-title {
+        color: #343a40;
+        font-weight: 700;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card {
+        background: #ffffff;
+        border: 1px solid #e9ecef;
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        overflow: hidden;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .stat-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+    }
+
+    .stat-value {
+        color: #343a40;
+        font-weight: 700;
+        font-size: 2.25rem;
+        margin-bottom: 0;
+    }
+
+    .stat-icon-wrapper {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+    }
+
+    .stat-icon {
+        font-size: 1.75rem;
+        color: #fff;
+    }
+
+    .bg-success { background-color: #28a745 !important; }
+    .bg-warning { background-color: #ffc107 !important; }
+    .bg-info { background-color: #17a2b8 !important; }
+
+    .card {
+        border: none;
+        border-radius: 0.75rem;
+    }
+
+    .card-header {
+        background-color: #ffffff;
+        border-bottom: 1px solid #e9ecef;
+        padding: 1rem 1.25rem;
+        border-top-left-radius: 0.75rem;
+        border-top-right-radius: 0.75rem;
+    }
+
+    .section-title {
+        color: #343a40;
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+
+    .section-title i {
+        color: #007bff;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #495057;
+    }
+
+    .form-control, .form-select {
+        border-radius: 0.5rem;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .table-vcenter td, .table-vcenter th {
+        vertical-align: middle !important;
+        padding: 1rem 1.25rem;
+    }
+
+    .table thead {
+        color: #495057;
+        font-weight: 600;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f3f5;
+        cursor: pointer;
+    }
+
+    .table th {
+        border-top: none;
+        border-bottom-width: 1px;
+    }
+
+    .table td {
+        border-top: 1px solid #e9ecef;
+    }
+
+    .badge {
+        font-size: 0.8em;
+        padding: 0.5em 0.8em;
+        border-radius: 0.35rem;
+        font-weight: 500;
+    }
+
+    .bg-success-soft { background-color: #eaf6ec; }
+    .text-success { color: #28a745 !important; }
+    .bg-warning-soft { background-color: #fff8e6; }
+    .text-warning { color: #ffc107 !important; }
+    .bg-danger-soft { background-color: #fbe9e7; }
+    .text-danger { color: #dc3545 !important; }
+    .bg-secondary-soft { background-color: #f8f9fa; }
+    .text-secondary { color: #6c757d !important; }
+
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background-color: #ffffff;
+        border-bottom-left-radius: 0.75rem;
+        border-bottom-right-radius: 0.75rem;
+    }
+
+    .empty-state-icon {
+        font-size: 3.5rem;
+        color: #adb5bd;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state-text {
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin-bottom: 0;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    .btn-outline-primary { border-color: #007bff; color: #007bff; }
+    .btn-outline-primary:hover { background-color: #007bff; color: #fff; }
+    .btn-outline-secondary { border-color: #6c757d; color: #6c757d; }
+    .btn-outline-secondary:hover { background-color: #6c757d; color: #fff; }
+    .btn-outline-danger { border-color: #dc3545; color: #dc3545; }
+    .btn-outline-danger:hover { background-color: #dc3545; color: #fff; }
+    .btn-outline-success { border-color: #28a745; color: #28a745; }
+    .btn-outline-success:hover { background-color: #28a745; color: #fff; }
+</style>
+
+@functions {
+    string GetStatusBadge(string status)
+    {
+        return status.ToLower() switch
+        {
+            "paid" => "bg-success-soft text-success",
+            "pending" => "bg-warning-soft text-warning",
+            "cancelled" => "bg-danger-soft text-danger",
+            _ => "bg-secondary-soft text-secondary"
+        };
+    }
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,37 @@
+@using TennisCourtRentalSystem.Models;
+@model Rental
+
+<h2>Confirm Booking</h2>
+
+<form asp-action="Create">
+    <input type="hidden" asp-for="CourtNumber" />
+    <input type="hidden" asp-for="CustomerId" />
+    <input type="hidden" asp-for="RentalDate" />
+    <input type="hidden" asp-for="StartTime" />
+    <input type="hidden" asp-for="EndTime" />
+    <input type="hidden" asp-for="RentalFee" />
+    
+    <div>
+        <label>Court Number:</label>
+        <span>@Model.CourtNumber</span>
+    </div>
+    <div>
+        <label>Date:</label>
+        <span>@Model.RentalDate.ToShortDateString()</span>
+    </div>
+    <div>
+        <label>Time:</label>
+        <span>@Model.StartTime.ToString("HH:mm") - @Model.EndTime.ToString("HH:mm")</span>
+    </div>
+    <div>
+        <label>Fee:</label>
+        <span>@Model.RentalFee.ToString("C")</span>
+    </div>
+    
+    <div>
+        <label asp-for="ExpectedAttendance"></label>
+        <input asp-for="ExpectedAttendance" type="number" />
+    </div>
+
+    <button type="submit">Confirm Booking</button>
+</form>

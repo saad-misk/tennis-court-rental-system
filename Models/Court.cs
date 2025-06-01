@@ -7,6 +7,7 @@ public partial class Court
     public string Location { get; set; } = null!;
 
     public string CourtStatus { get; set; } = null!;
+    public string RentalStatus { get; set; } = null!;
 
     public virtual ICollection<Rental> Rentals { get; set; } = new List<Rental>();
 }

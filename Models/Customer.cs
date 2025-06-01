@@ -2,7 +2,7 @@
 
 public partial class Customer : User
 {
-    public int CustomerId { get; set; }
+    public string CustomerId { get; set; }
 
     public string? OrganizationName { get; set; }
 
@@ -10,9 +10,9 @@ public partial class Customer : User
 
     public string TelNo { get; set; } = null!;
 
-    public int AddressId { get; set; }
+    public string AddressId { get; set; }
 
-    public string CustomerType { get; set; } = null!;
+    public int CustomerType { get; set; } // 1:Resident, 0:NonResident
 
     public virtual Address Address { get; set; } = null!;
 

@@ -1,0 +1,35 @@
+@model Rental
+
+<h2>Edit Rental</h2>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="RentalId" />
+    <input type="hidden" asp-for="CustomerId" />
+
+    <div>
+        <label asp-for="CourtNumber"></label>
+        <input asp-for="CourtNumber" />
+    </div>
+
+    <div>
+        <label asp-for="RentalDate"></label>
+        <input asp-for="RentalDate" type="date" />
+    </div>
+
+    <div>
+        <label asp-for="StartTime"></label>
+        <input asp-for="StartTime" type="time" />
+    </div>
+
+    <div>
+        <label asp-for="EndTime"></label>
+        <input asp-for="EndTime" type="time" />
+    </div>
+
+    <div>
+        <label asp-for="ExpectedAttendance"></label>
+        <input asp-for="ExpectedAttendance" type="number" />
+    </div>
+
+    <button type="submit">Save Changes</button>
+</form>

@@ -1,66 +1,80 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TennisCourtRentalSystem.Models;
 using TennisCourtRentalSystem.Repositories;
 
-namespace TennisCourtRentalSystem.Controllers
+namespace TennisCourtRentalSystem.Controllers;
+
+public class CourtController : Controller
 {
-    public class CourtController : Controller
+    private readonly CourtRepository _courtRepo;
+
+    public CourtController(CourtRepository courtRepo)
     {
-        private readonly CourtRepository _courtRepository;
-        private readonly RentalRepository _rentalRepository;
-
-        public CourtController(CourtRepository courtRepository, RentalRepository rentalRepository)
-        {
-            _courtRepository = courtRepository;
-            _rentalRepository = rentalRepository;
-        }
-
-        // GET: Court
-        public IActionResult Index()
-        {
-            var courts = _courtRepository.GetAllCourts();
-            return View("~/Views/Court/courts.cshtml", courts);
-        }
-
-        // GET: Court/Available/5
-        public IActionResult Available(int courtNumber)
-        {
-            var court = _courtRepository.GetCourtByNumber(courtNumber);
-            if (court == null)
-            {
-                return NotFound();
-            }
-            return View(court);
-        }
-
-        public IActionResult Courts() => View();  // Views/Court/courts.cshtml  
-
-        // POST: Court/CheckAvailability
-        [HttpPost]
-        public IActionResult CheckAvailability(int courtNumber, DateTime date, TimeSpan startTime, TimeSpan endTime)
-        {
-            // Convert to DateOnly/TimeOnly (requires .NET 6+)
-            var dateOnly = DateOnly.FromDateTime(date);
-            var startTimeOnly = TimeOnly.FromTimeSpan(startTime);
-            var endTimeOnly = TimeOnly.FromTimeSpan(endTime);
-
-            // Check for conflicts - You'll need to implement this in RentalRepository
-            var isAvailable = !_rentalRepository.HasConflict(courtNumber, dateOnly, startTimeOnly, endTimeOnly);
-
-            ViewBag.IsAvailable = isAvailable;
-            ViewBag.SelectedDate = date;
-            ViewBag.StartTime = startTime;
-            ViewBag.EndTime = endTime;
-            
-            var court = _courtRepository.GetCourtByNumber(courtNumber);
-            return View("Available", court);
-        }
-
-        // POST: Court/UpdateStatus
-        [HttpPost]
-        public IActionResult UpdateStatus(int courtNumber, string newStatus)
-        {
-            _courtRepository.UpdateCourtStatus(courtNumber, newStatus);
-            return RedirectToAction(nameof(Index));
-        }
+        _courtRepo = courtRepo;
     }
+
+    public IActionResult AvailableCourts(List<Court> courts)
+    {
+        return View(courts);
+    }
+
+    [Authorize(Roles = "Admin")]
+    public IActionResult ManageCourts()
+    {
+        var courts = _courtRepo.GetAllCourts();
+        return View(courts);
+    }
+
+    [Authorize(Roles = "Admin")]
+    public IActionResult CreateCourt()
+    {
+        return View(new Court());
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    public IActionResult CreateCourt(Court model)
+    {
+        if (ModelState.IsValid)
+        {
+            _courtRepo.AddCourt(model);
+            return RedirectToAction("ManageCourts");
+        }
+        return View(model);
+    }
+
+    [Authorize(Roles = "Admin")]
+    public IActionResult EditCourt(int id)
+    {
+        var court = _courtRepo.GetCourtByNumber(id);
+        return View(court);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    public IActionResult EditCourt(Court model)
+    {
+        if (ModelState.IsValid)
+        {
+            _courtRepo.UpdateCourt(model);
+            return RedirectToAction("ManageCourts");
+        }
+        return View(model);
+    }
+
+    [Authorize(Roles = "Admin")]
+    public IActionResult DeleteCourt(int id)
+    {
+        _courtRepo.DeleteCourt(id);
+        return RedirectToAction("ManageCourts");
+    }
+
+    public IActionResult Availability(DateTime date, DateTime startTime, DateTime endTime)
+    {
+        var availability = _courtRepo.GetAvailableCourts(date, startTime, endTime);
+
+        return View(availability);
+    }
+    
 }

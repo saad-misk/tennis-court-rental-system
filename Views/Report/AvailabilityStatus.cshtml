@@ -1,0 +1,22 @@
+@model List<CourtAvailability>
+
+<h2>Court Availability</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Court Number</th>
+            <th>Location</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var court in Model)
+        {
+            <tr class="@(court.Status == "Rented" ? "table-danger" : "table-success")">
+                <td>@court.CourtNumber</td>
+                <td>@court.Location</td>
+                <td>@court.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>

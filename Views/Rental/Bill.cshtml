@@ -1,0 +1,162 @@
+@model Rental
+
+<div class="invoice-container">
+    <div class="invoice-header">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="invoice-title">Invoice <span class="text-muted">#@Model.RentalId</span></h1>
+            <div class="invoice-status">
+                <span class="badge @(Model.PaymentStatus == "Paid" ? "bg-success" : "bg-warning")">
+                    @Model.PaymentStatus
+                </span>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="bill-section">
+                    <h4 class="section-title"><i class="fas fa-user me-2"></i>Customer Information</h4>
+                    <dl class="bill-details">
+                        <dt>Name</dt>
+                        <dd>@Model.Customer.UserName</dd>
+                        
+                        <dt>Email</dt>
+                        <dd>@Model.Customer.Email</dd>
+                    </dl>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="bill-section">
+                    <h4 class="section-title"><i class="fas fa-receipt me-2"></i>Invoice Details</h4>
+                    <dl class="bill-details">
+                        <dt>Issue Date</dt>
+                        <dd>@DateTime.Now.ToString("MMM dd, yyyy")</dd>
+                        
+                        <dt>Due Date</dt>
+                        <dd>@Model.RentalDate.ToString("MMM dd, yyyy")</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bill-section mt-4">
+        <h4 class="section-title"><i class="fas fa-tennis-ball me-2"></i>Rental Details</h4>
+        <div class="row">
+            <div class="col-md-4">
+                <dl class="bill-details">
+                    <dt>Court Location</dt>
+                    <dd>@Model.Court.Location</dd>
+                </dl>
+            </div>
+            <div class="col-md-4">
+                <dl class="bill-details">
+                    <dt>Date</dt>
+                    <dd>@Model.RentalDate.ToString("MMM dd, yyyy")</dd>
+                </dl>
+            </div>
+            <div class="col-md-4">
+                <dl class="bill-details">
+                    <dt>Time Slot</dt>
+                    <dd>@Model.StartTime.ToString("hh:mm tt") - @Model.EndTime.ToString("hh:mm tt")</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="bill-total mt-5">
+        <div class="row justify-content-end">
+            <div class="col-md-4">
+                <dl class="total-summary">
+                    <dt>Subtotal</dt>
+                    <dd>@Model.RentalFee.ToString("C")</dd>
+                    
+                    <dt>Total Due</dt>
+                    <dd class="total-amount">@Model.RentalFee.ToString("C")</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="invoice-footer mt-5">
+        <button onclick="window.print()" class="btn btn-primary">
+            <i class="fas fa-print me-2"></i>Print Invoice
+        </button>
+        <p class="text-muted mt-3">Thank you for choosing our tennis court services!</p>
+    </div>
+</div>
+
+<style>
+    .invoice-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .invoice-title {
+        color: #2d3748;
+        font-weight: 600;
+        font-size: 2rem;
+    }
+
+    .section-title {
+        color: #28a745;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .bill-details {
+        display: grid;
+        grid-template-columns: max-content auto;
+        gap: 0.75rem 1.5rem;
+    }
+
+    .bill-details dt {
+        font-weight: 600;
+        color: #4a5568;
+    }
+
+    .bill-details dd {
+        color: #718096;
+        margin: 0;
+    }
+
+    .total-summary {
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+    }
+
+    .total-summary dt {
+        font-weight: 500;
+    }
+
+    .total-summary dd {
+        font-size: 1.25rem;
+        margin: 0.5rem 0;
+    }
+
+    .total-amount {
+        font-size: 1.5rem !important;
+        font-weight: 600;
+        color: #2d3748;
+    }
+
+    @@media print {
+        .invoice-container {
+            box-shadow: none;
+            padding: 0;
+        }
+        
+        .invoice-footer button {
+            display: none;
+        }
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">

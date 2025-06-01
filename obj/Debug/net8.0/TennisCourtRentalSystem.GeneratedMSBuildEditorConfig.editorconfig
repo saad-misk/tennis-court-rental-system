@@ -40,36 +40,88 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ3VzdG9tZXJzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Admin/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGV0YWlscy5jc2h0bWw=
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Admin/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGFzaGJvYXJkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Court/Available.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnRcQXZhaWxhYmxlLmNzaHRtbA==
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Court/Availability.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnRcQXZhaWxhYmlsaXR5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Court/courts.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnRcY291cnRzLmNzaHRtbA==
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Court/AvailableCourts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnRcQXZhaWxhYmxlQ291cnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Customer/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcQ3JlYXRlLmNzaHRtbA==
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Court/CreateCourt.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnRcQ3JlYXRlQ291cnQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Customer/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcRWRpdC5jc2h0bWw=
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Court/EditCourt.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnRcRWRpdENvdXJ0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Court/ManageCourts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnRcTWFuYWdlQ291cnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Customer/Confirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcQ29uZmlybWF0aW9uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Customer/CourtRentalRequest.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcQ291cnRSZW50YWxSZXF1ZXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Customer/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcRGFzaGJvYXJkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Customer/MyRentals.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcTXlSZW50YWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Dashboard/index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXGluZGV4LmNzaHRtbA==
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Customer/SortedCustomers.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcU29ydGVkQ3VzdG9tZXJzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Rental/Bill.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVudGFsXEJpbGwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Rental/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVudGFsXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Rental/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVudGFsXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Rental/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVudGFsXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Rental/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVudGFsXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Report/ActiveRentals.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XEFjdGl2ZVJlbnRhbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Report/AvailabilityStatus.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XEF2YWlsYWJpbGl0eVN0YXR1cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Report/CourtRevenue.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XENvdXJ0UmV2ZW51ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Report/CurrentUsage.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XEN1cnJlbnRVc2FnZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/user/Desktop/U/third_year_6th_semester/DBP/project/app_try/TennisCourtRentalSystem/TennisCourtRentalSystem/Views/Shared/Error.cshtml]

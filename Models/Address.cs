@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace TennisCourtRentalSystem.Models;
+﻿namespace TennisCourtRentalSystem.Models;
 
 public partial class Address
 {
-    public int AddressId { get; set; }
+    public string AddressId { get; set; }
 
     public string State { get; set; } = null!;
 

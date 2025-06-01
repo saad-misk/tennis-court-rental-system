@@ -1,82 +1,160 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography;
-using System.Text;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using TennisCourtRentalSystem.Models;
+using TennisCourtRentalSystem.Models.ViewModels;
 using TennisCourtRentalSystem.Repositories;
+using Microsoft.AspNetCore.Identity;
 
-namespace TennisCourtRentalSystem.Controllers
+namespace TennisCourtRentalSystem.Controllers;
+
+public class AccountController : Controller
 {
-    public class AccountController : Controller
+    private readonly CustomerRepository _customerRepo;
+    private readonly AddressRepository _addressRepo;
+    private readonly CourtManagerRepository _courtManager;
+    private readonly IPasswordHasher<User> _passwordHasher;
+
+    public AccountController(
+        CustomerRepository customerRepo,
+        AddressRepository addressRepo,
+        CourtManagerRepository courtManager,
+        IPasswordHasher<User> passwordHasher)
     {
-        private readonly CustomerRepository _customerRepo;
-        private readonly CourtManagerRepository _managerRepo;
+        _customerRepo = customerRepo;
+        _addressRepo = addressRepo;
+        _courtManager = courtManager;
+        _passwordHasher = passwordHasher;
+    }
 
-        public AccountController(CustomerRepository customerRepo, CourtManagerRepository managerRepo)
+    // REGISTER
+    [HttpGet]
+    public IActionResult Register()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+        if (ModelState.IsValid)
         {
-            _customerRepo = customerRepo;
-            _managerRepo = managerRepo;
-        }
-
-        // GET: /Account/Login
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        // POST: /Account/Login
-        [HttpPost]
-        public IActionResult Login(string username, string password)
-        {
-            var hashed = HashPassword(password);
-            var customer = _customerRepo.GetCustomerByUsername(username);
-
-            if (customer != null && customer.PasswordHash == hashed)
+            if (_customerRepo.GetCustomerByUsername(model.UserName) != null)
             {
-                HttpContext.Session.SetString("UserType", "Customer");
-                HttpContext.Session.SetInt32("UserId", customer.CustomerId);
-                return RedirectToAction("Dashboard", "Customer");
+                ModelState.AddModelError("UserName", "Username is taken.");
+                return View(model);
             }
 
-            var manager = _managerRepo.GetManagerByUsername(username);
-            if (manager != null && manager.PasswordHash == hashed)
+            var address = new Address
             {
-                HttpContext.Session.SetString("UserType", "Manager");
-                HttpContext.Session.SetInt32("UserId", manager.EmployeeId);
-                return RedirectToAction("Dashboard", "CourtManager");
-            }
+                State = model.State,
+                City = model.City,
+                Street = model.Street
+            };
+            string addressId = _addressRepo.CreateAddress(address);
 
-            ViewBag.Error = "Invalid credentials.";
-            return View();
-        }
+            var customer = new Customer
+            {
+                UserName = model.UserName,
+                // PasswordHash = _passwordHasher.HashPassword(new User(), model.Password),
+                PasswordHash = model.Password,
+                Email = model.Email,
+                DateCreated = DateTime.UtcNow,
+                TelNo = model.TelNo,
+                CustomerType = model.CustomerType,
+                AddressId = addressId,
+                Gender = model.Gender,
+                OrganizationName = model.OrganizationName
+            };
 
-        // GET: /Account/Register
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        // POST: /Account/Register
-        [HttpPost]
-        public IActionResult Register(Customer customer, string password)
-        {
-            customer.PasswordHash = HashPassword(password);
-            customer.DateCreated = DateTime.Now;
             _customerRepo.CreateCustomer(customer);
 
-            return RedirectToAction("Login");
+            // Automatically log in the new user
+            await SignInUser(customer, "Customer");
+            return RedirectToAction("Dashboard", "Customer");
         }
+        return View(model);
+    }
 
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            return RedirectToAction("Login");
-        }
+    [HttpGet]
+    public IActionResult Login()
+    {
+        return View();
+    }
 
-        private string HashPassword(string password)
+    [HttpPost]
+    public async Task<IActionResult> Login(LoginViewModel model)
+    {
+        if (ModelState.IsValid)
         {
-            using var sha = SHA256.Create();
-            var bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return Convert.ToBase64String(bytes);
+            var admin = _courtManager.GetManagerByUsername(model.UserName);
+            if (admin != null)
+            {
+                // if (_passwordHasher.VerifyHashedPassword(admin, admin.PasswordHash, model.Password) == 
+                //     PasswordVerificationResult.Success)
+                // {
+                //     await SignInUser(admin, "Admin");
+                //     return RedirectToAction("Dashboard", "Admin");
+                // }
+                if (admin.PasswordHash == model.Password)
+                {
+                    await SignInUser(admin, "Admin"); // Admin
+                    return RedirectToAction("Dashboard", "Admin"); // Admin
+                }
+            }
+
+            var customer = _customerRepo.GetCustomerByUsername(model.UserName);
+            if (customer != null)
+            {
+                // if (_passwordHasher.VerifyHashedPassword(customer, customer.PasswordHash, model.Password) == 
+                //     PasswordVerificationResult.Success)
+                // {
+                //     await SignInUser(customer, "Customer");
+                //     return RedirectToAction("Dashboard", "Customer");
+                // }
+                if (customer.PasswordHash == model.Password)
+                {
+                    await SignInUser(customer, "Customer"); // Customer
+                    return RedirectToAction("Dashboard", "Customer"); // Customer
+                }
+            }
+
+            ModelState.AddModelError("", "Invalid credentials.");
         }
+        return View(model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        HttpContext.Session.Clear();
+        return RedirectToAction("Login", "Account");
+    }
+
+    private async Task SignInUser(User user, string role)
+    {
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.Role, role),
+            new Claim(ClaimTypes.Email, user.Email)
+        };
+
+        var claimsIdentity = new ClaimsIdentity(
+            claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+        var authProperties = new AuthenticationProperties
+        {
+            IsPersistent = true,
+            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
+        };
+
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(claimsIdentity),
+            authProperties);
     }
 }

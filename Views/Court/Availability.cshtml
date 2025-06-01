@@ -1,0 +1,124 @@
+@using TennisCourtRentalSystem.Models.ViewModels;
+@model CourtRentalRequestViewModel
+@{
+    ViewData["Title"] = "Court Rental Request";
+}
+
+<div class="container my-4">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h2 class="text-center mb-0">Court Rental Request</h2>
+        </div>
+        
+        <div class="card-body">
+            <form asp-action="SubmitRentalRequest" method="post" class="needs-validation" novalidate>
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <!-- Facility Section -->
+                <div class="section-header mb-4">
+                    <h4 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Facility Information</h4>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="RentalDate" class="form-label fw-bold"></label>
+                        <input asp-for="RentalDate" type="date" 
+                               class="form-control" 
+                               min="@DateTime.Today.ToString("yyyy-MM-dd")" 
+                               max="@DateTime.Today.AddDays(14).ToString("yyyy-MM-dd")">
+                        <span asp-validation-for="RentalDate" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label asp-for="Duration" class="form-label fw-bold"></label>
+                        <select asp-for="Duration" class="form-select">
+                            <option value="1:00">1 hour</option>
+                            <option value="1:30">1.5 hours</option>
+                            <option value="2:00">2 hours</option>
+                        </select>
+                        <span asp-validation-for="Duration" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <!-- Court Selection -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Select Courts</label>
+                    <div class="row g-3">
+                        @for (int i = 0; i < Model.AvailableCourts.Count; i++)
+                        {
+                            <div class="col-md-4">
+                                <div class="form-check card court-card">
+                                    <input type="checkbox" 
+                                           asp-for="AvailableCourts[i].IsSelected" 
+                                           class="form-check-input visually-hidden" />
+                                    <label class="form-check-label card-body">
+                                        <h5 class="card-title">
+                                            @Model.AvailableCourts[i].CourtNumber
+                                        </h5>
+                                        <p class="card-text small text-muted mb-0">
+                                            @Model.AvailableCourts[i].Description
+                                        </p>
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <span asp-validation-for="AvailableCourts" class="text-danger small"></span>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="d-grid mt-5">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-check-circle me-2"></i>Confirm Booking
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .court-card {
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.2s;
+    }
+
+    .court-card:hover {
+        border-color: #28a745;
+        transform: translateY(-2px);
+    }
+
+    .court-card input:checked + label {
+        background-color: #e8f5e9;
+        border-color: #28a745 !important;
+    }
+
+    .section-header {
+        border-left: 4px solid #28a745;
+        padding-left: 1rem;
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.getElementById('StartTime').addEventListener('change', function() {
+            const startTime = this.value;
+            const duration = document.getElementById('Duration').value.split(':');
+            const endTimeInput = document.getElementById('EndTime');
+            
+            if (startTime && duration.length === 2) {
+                const [hours, minutes] = duration;
+                const endTime = new Date(`2000-01-01T${startTime}`);
+                endTime.setHours(endTime.getHours() + parseInt(hours));
+                endTime.setMinutes(endTime.getMinutes() + parseInt(minutes));
+                
+                endTimeInput.value = endTime.toTimeString().slice(0,5);
+            }
+        });
+    </script>
+}

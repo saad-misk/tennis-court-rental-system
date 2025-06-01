@@ -1,41 +1,81 @@
-@model IEnumerable<TennisCourtRentalSystem.Models.Customer>
-
+@model List<Customer>
 @{
     ViewData["Title"] = "Customers";
-    Layout = "_Layout";
 }
 
-<h1>Customers</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Customer ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Customer Type</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.CustomerId)</td>
-                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                <td>@Html.DisplayFor(modelItem => item.TelNo)</td>
-                <td>@Html.DisplayFor(modelItem => item.CustomerType)</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.CustomerId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.CustomerId">Details</a>
-                </td>
-            </tr>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>@ViewData["Title"]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #f0f2f5;
+            padding: 20px;
         }
-    </tbody>
-</table>
+        .data-container {
+            max-width: 1200px;
+            margin: 2% auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .table-header {
+            background-color: #28a745;
+            color: white;
+        }
+        .action-buttons .btn {
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="data-container">
+        <h2 class="mb-4">Customer Management</h2>
+        
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered">
+                <thead class="table-header">
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Customer Type</th>
+                        <th>Registration Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var customer in Model)
+                    {
+                        <tr>
+                            <td>@customer.UserName</td>
+                            <td>@customer.Email</td>
+                            <td>@(customer.CustomerType == 1 ? "Resident" : "Non-Resident")</td>
+                            <td>@customer.DateCreated.ToString("MMM dd, yyyy")</td>
+                            <td class="action-buttons">
+                                <a href="#" class="btn btn-sm btn-primary">View</a>
+                                <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-<div>
-    <a asp-action="Create" class="btn btn-success">Create New Customer</a>
-</div>
+        <div class="mt-4">
+            <a href="#" class="btn btn-success">
+                <i class="fas fa-plus-circle"></i> Add New Customer
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</body>
+</html>
